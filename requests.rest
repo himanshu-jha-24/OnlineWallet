@@ -1,0 +1,7 @@
+POST http://localhost:8000/signup
+Content-Type: application/json
+
+{
+    "username":"himanshu",
+    "accountNo":"1231352"
+}
