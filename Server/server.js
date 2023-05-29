@@ -1,12 +1,14 @@
 const express=require('express')
 const app=express()
 const crypto=require('crypto')
+const cors=require('cors')
 require('dotenv').config()
 const jwt=require('jsonwebtoken')
 // const data=require('./data.js')
 const bcrypt =require('bcrypt')
 
 app.use(express.json())
+app.use(cors())
 
 const account=[]
 const transactions=[]
@@ -26,11 +28,12 @@ function generateToken(username, password) {
 }
 //increment money for a user
 function addMoney(user){
-  user.accountArr[0].balance = user.accountArr[0].balance+1000000
+  user.accountArr[0].balance = parseInt(parseInt(user.accountArr[0].balance)+parseInt(1000000))
 }
   
 //create user
 app.post('/signup',(req,res)=>{
+  console.log('triggered backend')
   const username = req.body.username
   const password = req.body.password
   // Check if the user already exists
@@ -77,7 +80,7 @@ app.post('/login', (req, res) => {
   // Generate a token for authentication
   const token = generateToken(username, hashedPassword)
   // Send the response
-  res.json({ username, message: 'Logged in', token })
+  res.json({ user, token })
 })
 
 // Middleware to check if a user is logged in
@@ -102,6 +105,7 @@ function requireAuth(req, res, next) {
 // POST request handler for a logged-in user to generate a new account
 app.post('/accounts', requireAuth, (req, res) => {
     const user = req.user
+    const token=req.body.token
     // Generate a unique account number
     const accountNumber = generateAccountNumber()
     // Create the new account
@@ -111,12 +115,13 @@ app.post('/accounts', requireAuth, (req, res) => {
     }
     user.accountArr.push(newAccount)
     // Send the response
-    res.json(user)
+    res.json({user,token})
   })
 
   //POST request to transfer money from one account to other
 app.post('/transfer',requireAuth,(req,res)=>{
   const user=req.user
+  const token=req.body.token
   const transferTo=req.body.transferTo
   const transferFrom=req.body.transferFrom
   const amount=req.body.amount
@@ -133,7 +138,10 @@ app.post('/transfer',requireAuth,(req,res)=>{
   return res.status(403).json({error:'you dont have sufficient balance in this account'})
   // updating array so that it dont have old state of these two account numbers
   user.accountArr=user.accountArr.filter(account=>
-    account.accountNumber!==transferFrom | account.accountNumber!==transferTo)
+    account.accountNumber!==transferFrom)
+  recipient.accountArr=recipient.accountArr.filter(account=>
+    account.accountNumber!==transferTo)
+
     // new state of sender account
   user.accountArr.push(
     {
@@ -142,10 +150,10 @@ app.post('/transfer',requireAuth,(req,res)=>{
     }
   )
   // new state of reciever's account
-  user.accountArr.push(
+  recipient.accountArr.push(
     {
       accountNumber:transferTo,
-      balance:recipientAccount.balance+amount
+      balance:parseInt(parseInt(recipientAccount.balance)+parseInt(amount))
     }
   )
   //create curr time
@@ -161,7 +169,7 @@ app.post('/transfer',requireAuth,(req,res)=>{
       timeOfTransaction:dateTime.toString()
     }
   )
-  res.json({success:'transmission successful'})
+  res.json({success:'transmission successful',user,token})
 
 })
 

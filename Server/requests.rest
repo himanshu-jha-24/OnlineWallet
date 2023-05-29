@@ -11,8 +11,8 @@ POST http://localhost:8000/login
 Content-Type:application/json
 
 {
-    "username":"himanshu",
-    "password":"1231352"
+    "username":"ramanshu",
+    "password":"2838291"
 }
 
 ###
@@ -20,7 +20,7 @@ POST http://localhost:8000/accounts
 Content-Type:application/json
 
 {
-    "token":"5275be549cba7b17c59c0cd15186bc04ae6d4e12a66634ed2a82bea2ce0b05e1"
+    "token":"f1ac063e9d52b5b5d2a1d723fb25c75fe3d3b19be233e199f242e6956e3b45d9"
 }
 
 ###
@@ -28,10 +28,10 @@ POST http://localhost:8000/transfer
 Content-Type:application/json
 
 {
-    "token": "5275be549cba7b17c59c0cd15186bc04ae6d4e12a66634ed2a82bea2ce0b05e1",
-    "transferFrom":"0082660240",
-    "transferTo":"1514269930",
-    "amount":"1000"
+    "token":"f1ac063e9d52b5b5d2a1d723fb25c75fe3d3b19be233e199f242e6956e3b45d9",
+    "transferFrom":"1805803041",
+    "transferTo":"5957926276",
+    "amount":"999"
 }
 
 ###
