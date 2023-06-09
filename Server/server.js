@@ -33,7 +33,6 @@ function addMoney(user){
   
 //create user
 app.post('/signup',(req,res)=>{
-  console.log('triggered backend')
   const username = req.body.username
   const password = req.body.password
   // Check if the user already exists
@@ -182,8 +181,6 @@ app.post('/transactionHistory',requireAuth,(req,res)=>{
     transaction.transferFrom===accountNumber | transaction.transferTo===accountNumber)
   res.json(history)
 })
-
-
 
 app.listen(8000)
 
